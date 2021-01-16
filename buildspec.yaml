@@ -1,0 +1,17 @@
+version 0.2
+
+phases:
+  install: #install all tools needed
+    commands:
+      - apt install -y awscli git python3
+      - wget https://storage.googleapis.com/kubernetes-helm/helm-v2.14.0-linux-amd64.tar.gz -O helm.tar.gz; tar -xzf helm.tar.gz
+      - chmod +x ./linux-amd64/helm
+      - mv ./linux-amd64/helm /usr/local/bin/helm
+  build: #build Docker image
+    commands:
+      - docker build . -t $IMAGE_REPO_NAME:$CODEBUILD_RESOLVED_SOURCE_VERSION -f Dockerfile
+  post_build: #push image to ECR and deploy helm
+    commands:
+      - $(aws ecr get-login --no-include-email --region eu-west-3)
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$CODEBUILD_RESOLVED_SOURCE_VERSION
+      #- "helm upgrade -i <release_name> <path_to_helm> -f <values.env> --set image.tag=$CODEBUILD_RESOLVED_SOURCE_VERSION"

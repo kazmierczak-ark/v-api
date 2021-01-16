@@ -6,4 +6,4 @@ def register(app):
 
 
 def health_check():
-    return Response('', status=200, mimetype='application/json')
+    return Response("Stayin' Alive", status=200, mimetype='application/json')
