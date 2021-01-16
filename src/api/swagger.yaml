@@ -1,0 +1,127 @@
+openapi: 3.0.0
+info:
+  description: V API
+  version: 0.1.0
+  title: Swagger V API
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: kazmierczak.ark@gmail.com
+tags:
+  - name: data
+    description: Timeseries data
+  - name: aggregates
+    description: calculated aggregates
+paths:
+  "/data":
+    post:
+      summary: Load data
+      tags:
+        - data
+      operationId: api.resources.data.save_data
+      requestBody:
+        $ref: "#/components/requestBodies/DataRequestObject"
+      responses:
+        "201":
+          description: Accepted
+        "400":
+          $ref: '#/components/responses/Unauthorized'
+  "/aggregates":
+    get:
+      summary: Retrieve aggregates
+      tags:
+        - data
+      operationId: api.resources.aggregates.get_aggregates
+      parameters:
+        - name: name
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: since
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+        - name: to
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+      responses:
+        "200":
+          description: aggregated values for given measurement
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AggregateResponseObject"
+        "400":
+          $ref: '#/components/responses/Unauthorized'
+components:
+  responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiErrorResponseObject"
+  requestBodies:
+    DataRequestObject:
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/DataRequestObject"
+  schemas:
+    ApiErrorResponseObject:
+      type: object
+      required:
+        - id
+        - title
+        - status
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        detail:
+          type: string
+        status:
+          type: number
+          format: integer
+        type:
+          type: string
+    DataRequestObject:
+      type: object
+      properties:
+        name:
+          type: string
+          description: name of data point
+        t:
+          type: integer
+          description: timestamp as epoch
+        v:
+          type: number
+          format: float
+          description: value
+    AggregateResponseObject:
+      type: object
+      properties:
+        avg:
+          type: number
+          format: float
+        sum:
+          type: integer
+
+  securitySchemes:
+    jwt:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      x-bearerInfoFunc: api.security.jwt.decoder.decode_token
+
+security:
+  - jwt: [ ]
