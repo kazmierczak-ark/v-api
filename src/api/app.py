@@ -1,10 +1,11 @@
 import connexion
 
-from api.common.db import configure_database
 from api.resources import health_check
 from api.resources.exceptions import set_error_handlers
+from api.adapters.repositories.data import DataRepository
+from api.adapters.services.influx_setup_client import InfluxSetupClient
 
-configure_database()
+InfluxSetupClient().create_bucket(DataRepository.bucket)
 
 app = connexion.FlaskApp(__name__, port=8000)
 

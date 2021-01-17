@@ -1,4 +1,4 @@
-from influxdb import InfluxDBClient
+from influxdb_client import InfluxDBClient, WriteOptions
 
 from api.common.config import config
 
@@ -6,11 +6,11 @@ from api.common.config import config
 class InfluxClient:
 
     def __init__(self):
-        self._db_client = InfluxDBClient(host=config['DB_HOST'], port=config['DB_PORT'], pool_size=10)
+        self._db_client = InfluxDBClient(url=f"http://{config['DB_HOST']}:{config['DB_PORT']}", token="", org='-',
+                                         pool_size=10)
 
-    def write(self, data, db_name, protocol: str, batch_size: int = 10000, time_precision: str = 's'):
-        self._db_client.switch_database(db_name)
-        self._db_client.write_points(data, batch_size=batch_size, protocol=protocol, time_precision=time_precision)
+    def write(self, data, bucket, batch_size: int = 10000):
+        write_client = self._db_client.write_api(write_options=WriteOptions(batch_size=batch_size))
+        write_client.write(bucket=bucket, record=data)
 
-    def create_database(self, db_name):
-        self._db_client.create_database(db_name)
+        write_client.close()

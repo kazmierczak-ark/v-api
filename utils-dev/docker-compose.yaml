@@ -3,10 +3,12 @@ version: '3'
 services:
   db:
     container_name: influx_db
-    image: influxdb
+    image: influxdb:1.8.3
     restart: always
     ports:
       - 8086:8086
+    environment:
+      INFLUXDB_HTTP_FLUX_ENABLED: "true"
 
   api:
     container_name: v-api

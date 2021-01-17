@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 from typing import List, Dict
 
-from api.business_logic.models.data import Data
 from api.business_logic.models.common import BadRequestError
+from api.business_logic.models.data import Data
 
 
 @dataclass
@@ -18,5 +18,5 @@ class DataSeries:
         except Exception:
             raise BadRequestError(Exception)
 
-    def to_line(self):
-        return [data_entry.to_line() for data_entry in self.series]
+    def to_point(self):
+        return [data_entry.to_point() for data_entry in self.series]

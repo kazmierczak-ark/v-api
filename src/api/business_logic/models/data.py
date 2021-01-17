@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from api.business_logic.models.common import BadRequestError
+from influxdb_client import Point, WritePrecision
 
 
 @dataclass
@@ -17,5 +18,5 @@ class Data:
         except Exception:
             raise BadRequestError(Exception)
 
-    def to_line(self):
-        return f"{self.name} value={self.value} {self.time}"
+    def to_point(self):
+        return Point(self.name).field("value", self.value).time(self.time, write_precision=WritePrecision.S)
