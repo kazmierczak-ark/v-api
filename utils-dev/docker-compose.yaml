@@ -1,4 +1,4 @@
-version: '3'
+version: '3.5'
 
 services:
   db:
@@ -20,6 +20,8 @@ services:
     environment:
       DB_HOST: db
       DB_PORT: 8086
+      CALCULATE_API_HOST: vcalculateapi
+      CALCULATE_API_PORT: 5000
 
       GUNICORN_LOG_LEVEL: debug
       GUNICORN_WORKER_CLASS: sync
@@ -27,3 +29,7 @@ services:
       GUNICORN_WORKERS: 1
       GUNICORN_LIMIT_REQUEST_LINE: 4094
       GUNICORN_TIMEOUT: 60
+
+networks:
+  default:
+    name: v-app
