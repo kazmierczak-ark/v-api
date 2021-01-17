@@ -4,7 +4,7 @@ from dataclasses import dataclass
 @dataclass
 class Aggregate:
     avg: float
-    sum: int
+    sum: float
 
     @classmethod
     def create(cls, values_dict):

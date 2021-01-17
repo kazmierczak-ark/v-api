@@ -1,5 +1,5 @@
 SET api_definition=https://raw.githubusercontent.com/kazmierczak-ark/v-calculation/main/VCalculateApi/swagger_generated.yaml
-SET version=0.1.1
+SET version=0.1.2
 md tmp
 md ..\src\libs
 

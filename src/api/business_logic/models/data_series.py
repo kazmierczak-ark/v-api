@@ -1,3 +1,4 @@
+import multiprocessing as mp
 from dataclasses import dataclass
 from typing import List, Dict
 
@@ -19,4 +20,13 @@ class DataSeries:
             raise BadRequestError(Exception)
 
     def to_point(self):
-        return [data_entry.to_point() for data_entry in self.series]
+        #overkill that slows down processing for small amounts of data - normally would base choice on exact business cases expected
+        pool = mp.Pool(mp.cpu_count())
+        points = pool.map(DataSeries.data_entry_to_point, self.series)
+        pool.close()
+        pool.join()
+        return points
+
+    @staticmethod
+    def data_entry_to_point(data: Data):
+        return data.to_point()

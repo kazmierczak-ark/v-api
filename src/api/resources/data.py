@@ -4,7 +4,7 @@ from api.security.jwt.token_info import TokenInfo
 
 
 def save_data(body, token_info: TokenInfo):
-    print(token_info['name'])
+    print(f"User name passed in token: {token_info['name']}")
     # TODO use authentication token for real
     repo = DataRepository()
     bl = SaveData(repo)
