@@ -3,7 +3,9 @@ FROM python:3.9 as base
 FROM base as builder
 WORKDIR /install
 
+
 COPY /requirements/common.txt .
+COPY ["libs/", "/install/libs/"]
 RUN pip install --prefix=/install -r common.txt
 
 FROM base

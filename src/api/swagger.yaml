@@ -14,7 +14,7 @@ tags:
 paths:
   "/data":
     post:
-      summary: Load data
+      summary: Save data
       tags:
         - data
       operationId: api.resources.data.save_data
